@@ -3,15 +3,7 @@ import { defineProps } from "vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import Pagination from "../Components/Pagination.vue";
 
-const props = defineProps({
-    stationaries: {
-        type: Object,
-    },
-    categories: {
-        type: Array,
-    },
-});
-console.log(props.categories);
+const props = defineProps(["categories"]);
 </script>
 
 <template>
@@ -70,12 +62,12 @@ console.log(props.categories);
                     </a>
                 </li>
                 <li>
-                    <a
-                        href="#"
-                        class="flex items-center p-2 text-gray-900 hover:text-white rounded-lg dark:text-white hover:bg-blue-800 dark:hover:bg-blue-700 group"
+                    <Link
+                        :href="route('stationary.index')" 
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >
                         <svg
-                            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-white dark:group-hover:text-white"
+                            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor"
@@ -86,15 +78,16 @@ console.log(props.categories);
                             />
                         </svg>
                         <span class="flex-1 ms-3 whitespace-nowrap">Item</span>
-                    </a>
+                    </Link>
                 </li>
                 <li>
                     <Link
-                        :href="route('category.index')"
-                        class="flex items-center p-2 text-gray-900 hover:text-white rounded-lg dark:text-white hover:bg-blue-800 dark:hover:bg-gray-700 group"
+                        :href="route('category.index')" 
+                        href="#"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >
                         <svg
-                            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-white dark:group-hover:text-white"
+                            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                             viewBox="0 0 48 48"
                             xmlns="http://www.w3.org/2000/svg"
                         >
@@ -148,10 +141,12 @@ console.log(props.categories);
     <div class="p-4 sm:ml-64">
         <div
             class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700"
-        ></div>
+        >
+            <h4 class="font-bold text-xl">Categories</h4>
+        </div>
 
         <Link
-            href="/stationary/create"
+            href="/category/create"
             class="float-right mt-5 mb-5 mr-10 bg-blue-500 rounded-md px-3 py-1 text-white"
         >
             <svg
@@ -172,23 +167,22 @@ console.log(props.categories);
                         stroke-linejoin: round;
                         stroke-width: 2;
                     "
-                ></path>
-            </svg>
-            <span class="py-2">Add Items</span>
+                ></path></svg
+            ><span>Add Categories</span>
         </Link>
         <div class="mt-20">
             <label class="text-gray-700 font-bold mb-2" for="pg"> Show: </label>
             <select
-                class="shadow appearance-none cursor-pointer border rounded w-28 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                class="shadow appearance-none border rounded w-28 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >
+                <option value="" disabled>10 rows</option>
                 <option value="1">10 rows</option>
-                <option value="2">20 rows</option>
-                <option value="3">30 rows</option>
+                <option value="2">Condition 2</option>
+                <option value="3">Condition 3</option>
                 <!-- Add more options as needed -->
             </select>
         </div>
         <div class="container mx-auto mt-10 clear-both">
-            <h1 class="font-bold text-2xl mb-3">Item List</h1>
             <table
                 class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
             >
@@ -198,25 +192,20 @@ console.log(props.categories);
                     <tr>
                         <th scope="col" class="px-6 py-3">Action</th>
                         <th scope="col" class="px-6 py-3">No</th>
-                        <th scope="col" class="px-6 py-3">Item</th>
-                        <th scope="col" class="px-6 py-3">Category</th>
-                        <th scope="col" class="px-6 py-3">Description</th>
-                        <th scope="col" class="px-6 py-3">Price</th>
-                        <th scope="col" class="px-6 py-3">Owner</th>
+                        <th scope="col" class="px-6 py-3">Categories</th>
                         <th scope="col" class="px-6 py-3">Publish</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Loop through stationaries array -->
+                    <!-- Loop through categories array -->
                     <tr
-                        v-for="(stationary, index) in props.categories"
-                        :key="stationary"
+                        v-for="(catg, index) in categories"
+                        :key="catg.id"
                         class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
                     >
                         <td class="px-6 py-4 flex">
                             <Link
-                                :href="route('stationary.edit', stationary.id)"
-                                :id="stationary.id"
+                                :href="route('category.edit', catg.id)"
                                 class="font-medium cursor-pointer mr-2"
                                 ><svg
                                     fill="green"
@@ -234,16 +223,11 @@ console.log(props.categories);
                             ></Link
                         > -->
                             <form
-                                :action="
-                                    route('stationary.destroy', stationary.id)
-                                "
+                                :action="route('category.destroy', catg.id)"
                                 method="post"
                                 @submit.prevent="
                                     $inertia.delete(
-                                        route(
-                                            'stationary.destroy',
-                                            stationary.stationaryId
-                                        )
+                                        route('category.destroy', catg.id)
                                     )
                                 "
                             >
@@ -265,14 +249,9 @@ console.log(props.categories);
                                 </button>
                             </form>
                         </td>
-
                         <td class="px-6 py-4">{{ index + 1 }}</td>
-                        <td class="px-6 py-4">{{ stationary.item }}</td>
-                        <td class="px-6 py-4">{{ stationary.category }}</td>
-                        <td class="px-6 py-4">{{ stationary.description }}</td>
-                        <td class="px-6 py-4">$ {{ stationary.price }}</td>
-                        <td class="px-6 py-4">{{ stationary.owner }}</td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4">{{ catg.category }}</td>
+                        <td>
                             <label
                                 class="relative inline-flex items-center cursor-pointer"
                             >
@@ -285,18 +264,15 @@ console.log(props.categories);
                                 <div
                                     class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
                                 ></div>
+                                <span
+                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    >Checked toggle</span
+                                >
                             </label>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="flex justify-center items-center my-10">
-                <Pagination
-                    class="z-10 bg-blue-500 hover:bg-slate-500"
-                    :links="stationaries.links"
-                >
-                </Pagination>
-            </div>
         </div>
     </div>
 </template>

@@ -1,22 +1,35 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
+// import { Inertia } from "@inertiajs/inertia";
+
 const props = defineProps({
-    editStationary: Object,
+    editStationary: {
+        type: Object,
+    },
+    categories: {
+        type: Object,
+    },
 });
-// console.log(props.editB);
+//  console.log(props.editStationary.data);
 const form = useForm({
+    id: props.editStationary.id,
     item: props.editStationary.item,
-    category: props.editStationary.category,
+    category: props.categories.category,
     desc: props.editStationary.description,
     price: props.editStationary.price,
     owner: props.editStationary.owner,
+    cond: props.editStationary.cond,
+    type: props.editStationary.type,
+    address: props.editStationary.address,
+    phone: props.editStationary.phone,
     _method: "put",
 });
+
 const Update = () => {
     // console.log(form);
     form.transform((data) => ({
         ...data,
-    })).post(route("stationary.update", props.editStationary.id));
+    })).post(route("stationary.update", form.id));
 };
 </script>
 <template>
@@ -30,7 +43,7 @@ const Update = () => {
             <!-- Item Information Form -->
             <div>
                 <h3 class="mb-5">Item Information</h3>
-                <form  @submit.prevent="Update">
+                <form @submit.prevent="Update">
                     <!-- ... (your item information fields) ... -->
                     <div>
                         <div class="mb-4">
@@ -56,12 +69,26 @@ const Update = () => {
                                     >*</span
                                 >
                             </label>
-                            <input
+                            <select
+                                id=""
+                                name=""
+                                v-model="form.category"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            >
+                                <option
+                                    v-for="data in categories"
+                                    :value="data.id"
+                                    class="sm:text-sm text-xs"
+                                >
+                                    {{ data.category }}
+                                </option>
+                            </select>
+                            <!-- <input
                                 v-model="form.category"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 type="text"
                                 placeholder="Select Category"
-                            />
+                            /> -->
                         </div>
                         <div class="mb-4">
                             <label
@@ -100,14 +127,21 @@ const Update = () => {
                             </label>
                             <select
                                 v-model="form.cond"
+                                name="cond"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             >
                                 <option value="" disabled>
                                     Select Item Condition
                                 </option>
-                                <option value="1">Condition 1</option>
-                                <option value="2">Condition 2</option>
-                                <option value="3">Condition 3</option>
+                                <option value="1" :selected="form.cond === '1'">
+                                    Condition 1
+                                </option>
+                                <option value="2" :selected="form.cond === '2'">
+                                    Condition 2
+                                </option>
+                                <option value="3" :selected="form.cond === '3'">
+                                    Condition 3
+                                </option>
                                 <!-- Add more options as needed -->
                             </select>
                         </div>
@@ -125,9 +159,15 @@ const Update = () => {
                                 <option value="" disabled>
                                     Select Item Type
                                 </option>
-                                <option value="1">Type 1</option>
-                                <option value="2">Type 2</option>
-                                <option value="3">Type 3</option>
+                                <option value="1" :selected="form.cond === '1'">
+                                    Type 1
+                                </option>
+                                <option value="2" :selected="form.cond === '2'">
+                                    Type 2
+                                </option>
+                                <option value="3" :selected="form.cond === '3'">
+                                    Type 3
+                                </option>
                                 <!-- Add more options as needed -->
                             </select>
                         </div>
@@ -235,7 +275,7 @@ const Update = () => {
             <!-- Owner Information Form -->
             <div>
                 <h3 class="mb-5">Owner Information</h3>
-                <form  @submit.prevent="Update">
+                <form @submit.prevent="Update">
                     <div class="mb-6">
                         <label
                             class="block text-gray-700 text-sm font-bold mb-2"
@@ -319,6 +359,3 @@ const Update = () => {
         </div>
     </div>
 </template>
-
-
-
